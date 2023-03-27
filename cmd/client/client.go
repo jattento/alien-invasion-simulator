@@ -99,7 +99,7 @@ func finalLogs(logsCh chan<- string, remainingCities map[string]map[earth.Direct
 
 	logsCh <- "These are the remaining cities..."
 	logsCh <- "--------"
-	logsCh <- "Just remember, if any actual aliens come to visit, don't blame me if this isn't accurucate."
+	logsCh <- "Just remember, if any actual aliens come to visit, don't blame me if this isn't accurate."
 	logsCh <- "Congratulations on completing the alien simulation!"
 }
 
