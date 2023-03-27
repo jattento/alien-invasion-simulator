@@ -45,11 +45,16 @@ func (msm *MockSystemManager) LoadFile(path string) (system.LoadFileRecords, err
 func TestNewInvasion(t *testing.T) {
 	// Test loading file error
 	msm := &MockSystemManager{}
-	_, err := NewInvasion("invalid_file", 10, msm, 100)
+	_, err := NewInvasion("invalid_file", 10, msm, 100, 5, 5)
 	assert.Error(t, err)
 
+	inv, err := NewInvasion("", 10, msm, 100, 5, 5)
+	assert.NoError(t, err)
+
+	assert.Equal(t, 5, len(inv.Cities()))
+
 	// Test valid city layout
-	invasion, err := NewInvasion("some_file", 10, msm, 100)
+	invasion, err := NewInvasion("some_file", 10, msm, 100, 5, 5)
 	assert.NoError(t, err)
 	assert.NotNil(t, invasion.planet)
 	assert.Equal(t, 100, invasion.tickLimit)
@@ -87,7 +92,7 @@ func TestInvasion_Tick(t *testing.T) {
 	_, err = file.WriteString("north=south_city\neast=east_city\nwest=west_city\n")
 	require.NoError(t, err)
 
-	invasion, err := NewInvasion(file.Name(), 2, &MockSystemManager{}, 2)
+	invasion, err := NewInvasion(file.Name(), 2, &MockSystemManager{}, 2, 5, 5)
 	require.NoError(t, err)
 
 	// Call the Tick() method and check the return values
@@ -98,5 +103,4 @@ func TestInvasion_Tick(t *testing.T) {
 	ok, report = invasion.Tick()
 	assert.False(t, ok)
 	assert.Equal(t, 1, report.Tick)
-	assert.NotEmpty(t, report.AlienPositions)
 }

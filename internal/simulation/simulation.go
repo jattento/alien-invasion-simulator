@@ -2,6 +2,7 @@ package simulation
 
 import (
 	"errors"
+	"os"
 
 	"github.com/jattento/alien-invasion-simulator/internal/earth"
 	"github.com/jattento/alien-invasion-simulator/internal/platform/system"
@@ -25,6 +26,8 @@ type SystemManager interface {
 	LoadFile(path string) (system.LoadFileRecords, error)
 }
 
+const _defaultName = "world_specs.txt"
+
 var _directionToEnum = map[string]earth.Direction{
 	"north": earth.North,
 	"south": earth.South,
@@ -32,7 +35,21 @@ var _directionToEnum = map[string]earth.Direction{
 	"west":  earth.West,
 }
 
-func NewInvasion(planetSpecsFile string, aliensAmount int, systemManager SystemManager, tickLimit int) (*Invasion, error) {
+func (invasion Invasion) Cities() map[string]map[earth.Direction]string {
+	return invasion.CityLayout
+}
+
+func NewInvasion(planetSpecsFile string, aliensAmount int, systemManager SystemManager, tickLimit, cities, matrixN int) (*Invasion, error) {
+	if planetSpecsFile == "" {
+		planetSpecsFile = _defaultName
+
+		if err := generateFile(planetSpecsFile, matrixN, cities); err != nil {
+			return nil, err
+		}
+
+		defer func() { _ = os.Remove(planetSpecsFile) }()
+	}
+
 	recs, err := systemManager.LoadFile(planetSpecsFile)
 	if err != nil {
 		return nil, err

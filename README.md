@@ -1,9 +1,16 @@
+[![Last release](https://img.shields.io/github/v/release/jattento/alien-invasion-simulator?style=plastic)](https://github.com/jattento/alien-invasion-simulator/releases)
+[![Build Status](https://github.com/jattento/alien-invasion-simulator/actions/workflows/go.yml/badge.svg)](https://github.com/jattento/alien-invasion-simulator/actions/workflows/go.yml)
+
 # alien-invasion-simulator
 Simulate an alien invasion. You know... just in case.
 
 ![](https://static.displate.com/280x392/displate/2020-12-21/c7eda619a5ddfadde906a368aaa7f212_4590ac66ec1dcfc80ae53403da627140.jpg)
 
 ## Usage
+
+![](https://drive.google.com/uc?export=view&id=1xfk999PCTae-QVUVhgKnAxwUmneevSBA)
+
+To download the program, just clone the repo or get the compiled code from the [releases page](https://github.com/jattento/alien-invasion-simulator/releases)
 
 First time simulating the earth's fall? 🔥 The easiest way to run this for the first time is to just
 run `alien-sim` in your console.
@@ -14,7 +21,7 @@ you can load the custom cities layout using the `--city-config=path` flag
 where the path is should be pointing to a valid text file in your file system.
 
 Oh, you just want to see some random world burn? 😈 The system can create the city's layout file for you
-use the flags `--days` and `--cities` to indicate how it shoul look like 
+use the flags `--days` and `--cities` to indicate how it should look like.
 
 ```
 Usage:
@@ -27,6 +34,12 @@ Flags:
     -d, --days int              Days until simulation ends. (default 10000)
     -m, --matrix int            Matrix size where the value is N when N*N=total matrix size. (default 5)
 ```
+
+Also keep in mind the controls used inside the simulation:
+
+- `Control + Q`: Close
+- `Control + A`: Time speed down
+- `Control + S`: Time speed up
 
 ## Config file format
 Example:

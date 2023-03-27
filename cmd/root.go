@@ -4,7 +4,8 @@ import (
 	"log"
 
 	"github.com/jattento/alien-invasion-simulator/cmd/client"
-
+	"github.com/jattento/alien-invasion-simulator/internal/platform/system"
+	"github.com/jattento/alien-invasion-simulator/internal/simulation"
 	"github.com/spf13/cobra"
 )
 
@@ -20,8 +21,13 @@ var (
 		Short: "An alien invasion simulator",
 		Long:  "An alien invasion simulator with 99% accuracy.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := client.Run(*_days, *_aliens, *_cities, *_matrix, *_cityConfig); err != nil {
-				log.Fatal(err.Error())
+			sim, err := simulation.NewInvasion(*_cityConfig, *_aliens, system.NewManager(), *_days, *_cities, *_matrix)
+			if err != nil {
+				log.Fatal("failed creating simulation: ", err.Error())
+			}
+
+			if err := client.Run(sim, *_aliens); err != nil {
+				log.Fatal("failed creating client: ", err.Error())
 			}
 		},
 	}
