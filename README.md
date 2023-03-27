@@ -21,7 +21,7 @@ you can load the custom cities layout using the `--city-config=path` flag
 where the path is should be pointing to a valid text file in your file system.
 
 Oh, you just want to see some random world burn? 😈 The system can create the city's layout file for you
-use the flags `--days` and `--cities` to indicate how it should look like.
+use the flags `--matrix` and `--cities` to indicate how it should look like.
 
 ```
 Usage:
@@ -52,7 +52,9 @@ Bee east=Bar
 ```
 Rules:
 - Each city that appears in the file must have its own unique record
-- Layout must be consistent: if Baz has Foo at the east, then Foo must have Baz at the west 
+- Layout must be consistent: if Baz has Foo at the east, then Foo must have Baz at the west
+- The city and each of the pairs are separated by a single space, and the
+  directions are separated from their respective cities with an equals (=) sign.
 
 ## Scaffolding
 This repo was designed using [package oriented design](https://www.ardanlabs.com/blog/2017/02/package-oriented-design.html).
