@@ -35,8 +35,17 @@ var _directionToEnum = map[string]earth.Direction{
 	"west":  earth.West,
 }
 
+// Cities returns a copy of the map layout
 func (invasion Invasion) Cities() map[string]map[earth.Direction]string {
-	return invasion.CityLayout
+	mapCopy := make(map[string]map[earth.Direction]string)
+	for k, m := range invasion.CityLayout {
+		mapCopy[k] = make(map[earth.Direction]string)
+		for direction, adjacent := range m {
+			mapCopy[k][direction] = adjacent
+		}
+	}
+
+	return mapCopy
 }
 
 func NewInvasion(planetSpecsFile string, aliensAmount int, systemManager SystemManager, tickLimit, cities, matrixN int) (*Invasion, error) {

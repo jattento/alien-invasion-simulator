@@ -24,7 +24,10 @@ func Run(invSimulation Simulation, aliens int) error {
 	citiesCh := make(chan []string)
 
 	worldMatrix := worldMap{cities: make([]city, 0), citiesIndex: make(map[string]int), alive: aliens}
-	for cityInfo := range invSimulation.Cities() {
+
+	remainingCities := invSimulation.Cities()
+
+	for cityInfo := range remainingCities {
 		worldMatrix.save(city{name: cityInfo})
 	}
 
@@ -42,6 +45,7 @@ func Run(invSimulation Simulation, aliens int) error {
 			for _, battleReport := range report.Battles {
 				worldMatrix.save(city{name: battleReport.City, destroyed: true, aliens: battleReport.InvolvedAliens})
 				logsCh <- killLog(battleReport)
+				deleteCity(remainingCities, battleReport.City)
 			}
 			for cityName := range report.AlienPositions {
 				worldMatrix.save(city{name: cityName, aliens: report.AlienPositions[cityName]})
@@ -54,9 +58,7 @@ func Run(invSimulation Simulation, aliens int) error {
 			time.Sleep(time.Duration(atomic.LoadInt64(&t.WaitTime)) - (time.Now().Sub(now)))
 		}
 
-		logsCh <- "Congratulations on completing the alien simulation! "
-		logsCh <- "Just remember, if any actual aliens come to visit, don't blame me if this isn't accurucate."
-
+		finalLogs(logsCh, remainingCities)
 	}()
 
 	if err := t.Run(); err != nil {
@@ -64,6 +66,41 @@ func Run(invSimulation Simulation, aliens int) error {
 	}
 
 	return nil
+}
+
+func deleteCity(cities map[string]map[earth.Direction]string, city string) {
+	delete(cities, city)
+	for cityName, adjacentCities := range cities {
+		for direction, adjacentCityName := range adjacentCities {
+			if adjacentCityName == city {
+				delete(cities[cityName], direction)
+			}
+		}
+	}
+}
+
+func finalLogs(logsCh chan<- string, remainingCities map[string]map[earth.Direction]string) {
+	var enumToDirection = map[earth.Direction]string{
+		earth.North: "north",
+		earth.South: "south",
+		earth.East:  "east",
+		earth.West:  "west",
+	}
+
+	logsCh <- "--------"
+	for cityName, adjacentData := range remainingCities {
+		cityInfo := cityName
+		for direction, adjacentCityName := range adjacentData {
+			cityInfo += " " + enumToDirection[direction] + "=" + adjacentCityName
+		}
+
+		logsCh <- cityInfo
+	}
+
+	logsCh <- "These are the remaining cities..."
+	logsCh <- "--------"
+	logsCh <- "Just remember, if any actual aliens come to visit, don't blame me if this isn't accurucate."
+	logsCh <- "Congratulations on completing the alien simulation!"
 }
 
 func killLog(report earth.BattleReport) string {
