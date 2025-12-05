@@ -17,3 +17,11 @@
 
 # Build output directory
 bin/
+
+# Binary executables
+alien-sim
+todo
+
+# Generated files
+world_specs.txt
+.todos.json
